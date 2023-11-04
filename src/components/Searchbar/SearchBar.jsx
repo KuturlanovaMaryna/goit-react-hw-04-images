@@ -1,44 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import css from './SearchBar.module.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-export default class SearchBar extends Component {
-  state = {
-    input: '',
+const SearchBar = ({ onSubmit }) => {
+  // state = {
+  //   input: '',
+  // };
+  const [input, setInput] = useState('');
+
+  const onChange = event => {
+    setInput(event.target.value.toLowerCase());
   };
 
-  onChange = event => {
-    this.setState({ input: event.target.value.toLowerCase() });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    if (this.state.input.trim() === '') {
+    if (input.trim() === '') {
       Notify.warning('Enter your search query');
       return;
     }
 
-    this.props.onSubmit(this.state.input);
+    onSubmit(input);
   };
 
-  render() {
-    return (
-      <header className={css.searchbar}>
-        <form className={css.form} onSubmit={this.handleSubmit}>
-          <input
-            name="input"
-            onChange={this.onChange}
-            className={css.searchInput}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-          <button type="submit" className={css.searchBtn}>
-            <span className={css.buttonName}>Search</span>
-          </button>
-        </form>
-      </header>
-    );
-  }
-}
+  return (
+    <header className={css.searchbar}>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <input
+          name="input"
+          onChange={onChange}
+          className={css.searchInput}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+        />
+        <button type="submit" className={css.searchBtn}>
+          <span className={css.buttonName}>Search</span>
+        </button>
+      </form>
+    </header>
+  );
+};
+
+export default SearchBar;
